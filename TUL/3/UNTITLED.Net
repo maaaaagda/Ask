@@ -1,0 +1,67 @@
+*Spice netlist for Circuit: D:\Studia\Architektura sys. Komputerowych\Labolatoria\TUL\3\UNTITLED.CKT
+VDVCC 27 0 DC 5
+VDVDD 26 0 DC 5
+* BEGIN Adding ADC and/or DAC
+A1 [34 35 36 37 38 39 48 49] [U6A_6 U1A_1 U1A_2 U2A_2 U2A_3 U2A_4 U3A_3 U3A_5] dav_mod
+A2 [29 31 32 40 42 44 46 55 57] [V1_1 U6A_5 U1A_3 D_1 C_1 B_1 A_1 26 27] dac_mod
+A3 [50 51 52 53 54] [U3A_4 U1B_5 U1B_6 U1D_13 U1D_12] dav_mod
+A4 [0 V1_1 U1A_3 D_1 C_1 B_1 A_1 26 27] [28 30 33 41 43 45 47 56 58] adc_mod
+.model dav_mod xdav
+.model dac_mod xdac
+.model adc_mod xadc
+* END adding ADC and/or DAC
+
+*0=0V 1=5V
+V1 V1_1 0 DC 5V
+*0=0V 1=5V
+VD D_1 0 DC 0V
+*0=0V 1=5V
+VC C_1 0 DC 0V
+*0=0V 1=5V
+VB B_1 0 DC 0V
+*0=0V 1=5V
+VA A_1 0 DC 0V
+D2 U6A_5 0 DLED0
+AU6A [58 28 30 34 33 30][57 29 34 32 29 34 31] A7474
+D1 U1A_3 0 DLED0
+AU5B [58 28 43][57 42 51] A74F04
+AU5A [58 28 45][57 44 52] A74F04
+AU4F [58 28 47][57 46 49] A74F04
+AU4E [58 28 41][57 40 39] A74F04
+AU4D [58 28 43][57 42 38] A74F04
+AU4C [58 28 45][57 44 53] A74F04
+AU4B [58 28 43][57 42 54] A74F04
+AU1D [58 28 54 53][57 54 53 37] A4011
+AU1C [58 28 41 45][57 40 44 48] A4011
+AU1B [58 28 51 52][57 51 52 50] A4011
+AU4A [58 28 U4A_1][57 U4A_1 U4A_2] A74F04
+AU3A [56 28 48 50 49][55 48 50 49 36] A4023
+AU2A [56 28 37 38 39 47][55 37 38 39 46 35] A4012
+AU1A [58 28 35 36][57 35 36 32] A4011
+.SAVE V1_1 U6A_5 U1A_3 U6A_6 U1A_1 U1A_2 U2A_2 U2A_3 U2A_4 D_1 C_1 B_1 A_1 U3A_3
+.SAVE U3A_5 U3A_4 U1B_5 U1B_6 U1D_13 U1D_12 @v1[p] v1#branch @vd[p] vd#branch
+.SAVE @vc[p] vc#branch @vb[p] vb#branch @va[p] va#branch @d2[p] @d2[id] @d1[p]
+.SAVE @d1[id]
+
+* Selected Circuit Analyses :
+.OP
+
+* Models/Subcircuits Used:
+
+*LED0 Typ INFRARED GaAs LED: Vf=1.2V Vr=5V If=40mA trr=3uS
+.MODEL DLED0 D (IS=93.5P RS=84M N=2.63 BV=5 IBV=10U
++ CJO=2.97P VJ=.75 M=.333 TT=4.32U)
+* (.MODEL  A7474 is not in the selected model file: C:\Program Files\CircuitMaker 2000\MODELS\7474.MOD)
+
+*74F04 FAST Hex Inverter - type:digital pkg:DIP14 [DVCC=14;DGND=7;](A:1,2)(B:3,4)(C:5,6)(D:9,8)(E:11,10)(F:13,12)
+.MODEL A74F04 xsimcode(file="C:\Program Files\CircuitMaker 2000\MODELS\FAST.SCB" func=f04 )
+
+*4011 CMOS 2-in NAND - type:digital pkg:DIP14 [DVDD=14;DGND=7;](A:1,2,3)(B:5,6,4)(C:8,9,10)(D:12,13,11)
+.MODEL A4011 xsimcode(file="C:\Program Files\CircuitMaker 2000\MODELS\CMOS.SCB" func=4011 )
+
+*4023 CMOS 3-input NAND - type:digital pkg:DIP14 [DVDD=14;DGND=7;](A:3,4,5,6)(B:1,2,8,9)(C:11,12,13,10)
+.MODEL A4023 xsimcode(file="C:\Program Files\CircuitMaker 2000\MODELS\CMOS.SCB" func=4023 )
+
+*4012 CMOS 4-input NAND - type:digital pkg:DIP14 [DVDD=14;DGND=7;](A:2,3,4,5,1)(B:9,10,11,12,13)
+.MODEL A4012 xsimcode(file="C:\Program Files\CircuitMaker 2000\MODELS\CMOS.SCB" func=4012 )
+.END

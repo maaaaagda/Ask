@@ -1,0 +1,113 @@
+
+.data # sekcja danych
+promptIntx: .asciiz "Wprowadz wartosc  'x': "
+promptInta: .asciiz "Wprowadz wartosc wspolczynnika 'a': "
+promptIntb: .asciiz "Wprowadz wartosc wspolczynnika 'b': "
+promptIntc: .asciiz "Wprowadz warstosc wspolczynnika 'c': "
+promptIntd: .asciiz "Wprowadz wartosc wspolczynnika 'd': "
+resultInt: .asciiz "Wynik = "
+linefeed: .asciiz "\n"
+enterkey: .asciiz "Nacisnij '0' aby zakonczyc: "
+repeatForAnotherABCD: .asciiz "Czy chcesz powtorzyc dla innych wspolczynnikow?  "
+repeatForAnotherX: .asciiz "Czy chcesz powtorzyc dla innego 'x'?  "
+
+.text 
+main:
+Calculate:
+# wyzeruj wynik
+move $t1,$0 
+
+# wyswietl wiadomosc o podaniu 'a'
+li $v0,4 
+la $a0,promptInta 
+syscall
+
+# pobierz 'a'
+li $v0,5 
+syscall 
+move $t4,$v0 
+
+# wyswietl wiadomosc o podaniu 'b'
+li $v0,4 
+la $a0,promptIntb 
+syscall
+
+# pobierz 'b'
+li $v0,5 
+syscall 
+move $t5,$v0 
+
+# wyswietl wiadomosc o podaniu 'c'
+li $v0,4 
+la $a0,promptIntc 
+syscall
+# pobierz 'c'
+li $v0,5 
+syscall 
+move $t6,$v0 
+
+# wyswietl wiadomosc o podaniu 'd'
+li $v0,4 
+la $a0,promptIntd 
+syscall
+
+# pobierz  'd' z wejœcia
+li $v0,5 
+syscall 
+move $t7,$v0 
+# wyswietl wiadomosc o podaniu 'x'
+li $v0,4 
+la $a0,promptIntx 
+syscall
+
+# pobierz  'x' z wejœcia
+li $v0,5 
+syscall 
+move $t0,$v0 
+# wylicz wartosæ x^3, wynik zapisz w  $t3, dodaj do wyniku w &t1
+mult $t0, $t0 
+mflo $t3
+mult $t3, $t0 
+mflo $t3
+mult $t3, $t4
+mflo $t3
+add $t1, $t1, $t3
+move $0,$t3 
+
+# wylicz wartosæ x^2 i dodaj do wyniku w $t1
+mult $t0, $t0 
+mflo $t3
+mult $t3, $t5
+mflo $t3
+add $t1, $t1, $t3
+
+# dodaj do wyniku  x^1
+mult $t0, $t6
+mflo $t3
+add $t1, $t1, $t3
+mflo $t3
+add $t1, $t1, $t7
+
+# wydrukuj kolejna wartosc
+li $v0,4 # kod dla wydruku „napisu”
+la $a0,resultInt # w $a0 adres napisu
+syscall # wydrukuj „napis”
+# print out the result
+li $v0,1 # kod wydruku „int”
+move $a0,$t1 # wynik w $a0
+syscall # wydrukuj wynik
+# przejscie do nowej linii
+li $v0,4 # kod dla wydruku „napisu”
+la $a0,linefeed # w $a0 adres napisu
+syscall # przejscie do nowej lini
+# oczekiwanie na nacisniecie klawisza
+li $v0,4 # kod dla wydruku „napisu”
+la $a0,enterkey # w $a0 adres napisu
+syscall # wydrukuj „napis”
+# oczekiwanie na nacisniecie klawisza – odczytana wartosc jest ignorowana
+li $v0,5 # kod odczytu „int”
+syscall # pobierz „int” – wynik w $v0
+bne $v0, $0, Calculate
+# Koniec
+li $v0,10 # kod wyjscia
+syscall # wyjscie z programu

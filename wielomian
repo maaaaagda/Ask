@@ -13,10 +13,10 @@ repeatForAnotherX: .asciiz "Czy chcesz powtorzyc dla innego 'x'?  "
 
 .text 
 main:
-Calculate:
-# wyzeruj wynik
-move $t1,$0 
 
+move $t0, $0
+move $t4, $0
+Wspolczynniki:
 # wyswietl wiadomosc o podaniu 'a'
 li $v0,4 
 la $a0,promptInta 
@@ -55,6 +55,9 @@ syscall
 li $v0,5 
 syscall 
 move $t7,$v0 
+# jesli podano 'x' oblicz
+bne $t0, $0, Calculate
+X:
 # wyswietl wiadomosc o podaniu 'x'
 li $v0,4 
 la $a0,promptIntx 
@@ -64,6 +67,11 @@ syscall
 li $v0,5 
 syscall 
 move $t0,$v0 
+
+Calculate:
+# wyzeruj wynik
+move $t1,$0 
+
 # wylicz wartosæ x^3, wynik zapisz w  $t3, dodaj do wyniku w &t1
 mult $t0, $t0 
 mflo $t3
@@ -89,25 +97,49 @@ mflo $t3
 add $t1, $t1, $t7
 
 # wydrukuj kolejna wartosc
-li $v0,4 # kod dla wydruku „napisu”
-la $a0,resultInt # w $a0 adres napisu
-syscall # wydrukuj „napis”
+li $v0,4 
+la $a0,resultInt 
+syscall 
 # print out the result
-li $v0,1 # kod wydruku „int”
-move $a0,$t1 # wynik w $a0
-syscall # wydrukuj wynik
+li $v0,1 
+move $a0,$t1
+syscall 
 # przejscie do nowej linii
-li $v0,4 # kod dla wydruku „napisu”
-la $a0,linefeed # w $a0 adres napisu
-syscall # przejscie do nowej lini
+li $v0,4 
+la $a0,linefeed 
+syscall 
+
+
+
 # oczekiwanie na nacisniecie klawisza
-li $v0,4 # kod dla wydruku „napisu”
-la $a0,enterkey # w $a0 adres napisu
-syscall # wydrukuj „napis”
+li $v0,4
+la $a0,repeatForAnotherABCD 
+syscall 
+
 # oczekiwanie na nacisniecie klawisza – odczytana wartosc jest ignorowana
-li $v0,5 # kod odczytu „int”
-syscall # pobierz „int” – wynik w $v0
+li $v0,5 
+syscall 
+bne $v0, $0, Wspolczynniki 
+
+# oczekiwanie na nacisniecie klawisza
+li $v0,4
+la $a0,repeatForAnotherX
+syscall 
+
+# oczekiwanie na nacisniecie klawisza – odczytana wartosc jest ignorowana
+li $v0,5 
+syscall 
+bne $v0, $0, X
+
+
+# oczekiwanie na nacisniecie klawisza
+li $v0,4
+la $a0,enterkey 
+syscall 
+# oczekiwanie na nacisniecie klawisza – odczytana wartosc jest ignorowana
+li $v0,5 
+syscall 
 bne $v0, $0, Calculate
 # Koniec
-li $v0,10 # kod wyjscia
-syscall # wyjscie z programu
+li $v0,10 
+syscall 

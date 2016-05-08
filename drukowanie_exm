@@ -1,0 +1,39 @@
+.data # sekcja danych
+ promptInt: .asciiz "Wprowadz wartosc typu int"
+ resultInt: .asciiz "Nastepna wartosc = "
+ linefeed: .asciiz "\n"
+ enterkey: .asciiz "Nacisnij dowolny klawisz aby zakonczyc"
+.text # sekcja kodu
+ main:
+# zaproszenie do wprowadzenia wartosci „int”
+ li $v0,4 # kod dla wydruku „napisu”
+ la $a0,promptInt # w $a0 adres napisu
+ syscall # wydrukuj zaproszenie
+# pobranie „int” z wejœcia
+ li $v0,5 # kod odczytu „int”
+ syscall # pobierz „int” – wynik w $v0
+ move $t0,$v0 # „int” w $t0
+# wylicz nastêpn¹ wartoœæ „int”
+ addi $t0, $t0, 1 # t0 <-- t0 + 1
+ # wydrukuj kolejna wartosc
+ li $v0,4 # kod dla wydruku „napisu”
+ la $a0,resultInt # w $a0 adres napisu
+ syscall # wydrukuj „napis”
+# print out the result
+ li $v0,1 # kod wydruku „int”
+ move $a0,$t0 # wynik w $a0
+ syscall # wydrukuj wynik
+# przejscie do nowej linii
+ li $v0,4 # kod dla wydruku „napisu”
+ la $a0,linefeed # w $a0 adres napisu
+ syscall # przejscie do nowej lini
+# oczekiwanie na nacisniecie klawisza
+ li $v0,4 # kod dla wydruku „napisu”
+ la $a0,enterkey # w $a0 adres napisu
+ syscall # wydrukuj „napis”
+# oczekiwanie na nacisniecie klawisza – odczytana wartosc jest ignorowana
+ li $v0,5 # kod odczytu „int”
+ syscall # pobierz „int” – wynik w $v0
+# Koniec
+ li $v0,10 # kod wyjscia
+ syscall # wyjscie z programu

@@ -1,0 +1,86 @@
+.data 
+promptIntx: .asciiz "Wprowadz wartosc  'x': "
+promptInta: .asciiz "Wprowadz przedzial\n"
+Nie: .asciiz "\nWynik nie miesci sie w przedziale "
+Tak: .asciiz "\nWynik miesci sie w przedziale "
+resultInt: .asciiz "Wynik = "
+linefeed: .asciiz "\n"
+enterkey: .asciiz "\nNacisnij '0' aby zakonczyc: "
+repeatForAnotherABCD: .asciiz "Czy chcesz powtorzyc dla innych wspolczynnikow?  "
+repeatForAnotherX: .asciiz "Czy chcesz powtorzyc dla innego 'x'?  "
+
+.text 
+main:
+X:
+addi $t1, $0, 1
+move $t2, $0
+# wyswietl wiadomosc o podaniu 'x'
+li $v0,4 
+la $a0,promptIntx
+syscall
+
+# pobierz  'x' z wejœcia
+li $v0,5 
+syscall 
+move $t0,$v0
+
+# wyswietl wiadomosc o podaniu przedzialu
+li $v0,4 
+la $a0,promptInta
+syscall
+
+# pobierz  a z wejœcia
+li $v0,5 
+syscall 
+move $t3,$v0
+
+# pobierz  b z wejœcia
+li $v0,5 
+syscall 
+move $t4,$v0
+
+# wyzeruj wynik
+Loop:
+addi $t2, $t2, 1 
+mult $t1, $t2
+mflo $t1
+bne $t2, $t0, Loop
+
+
+# wydrukuj  wartosc
+li $v0,4 
+la $a0,resultInt 
+syscall 
+
+# print out the result
+li $v0,1 
+move $a0,$t1
+syscall 
+
+bge $t3, $t1, nie
+bge $t1, $t4, nie
+
+# wydrukuj  ze wartosc miesci sie w przedziale
+li $v0,4 
+la $a0,Tak 
+syscall
+j exit
+ 
+nie:
+# wydrukuj  ze wartosc nie miesci sie w przedziale
+li $v0,4 
+la $a0,Nie 
+syscall 
+
+exit:
+# oczekiwanie na nacisniecie klawisza
+li $v0,4
+la $a0,enterkey 
+syscall 
+# oczekiwanie na nacisniecie klawisza – odczytana wartosc jest ignorowana
+li $v0,5 
+syscall 
+bne $v0, $0, X
+# Koniec
+li $v0,10 
+syscall 

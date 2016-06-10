@@ -1,11 +1,14 @@
 .data
 	tab: .space 100
 	tab1: .space 100
-	tab12: .space 100
+	a: .asciiz "Wprowadz 'a': " 
+	b: .asciiz "Wprowadz 'b': " 
+	zakres: .asciiz "Wpisz zakres: " 
 	ilosc: .asciiz "Podaj ile chcesz liczb: " 
+	iloscz: .asciiz "Ilosc liczb z zakresu: " 
 	liczba: .asciiz "Liczba " 
 	newline: .asciiz ", "
-	suma: .asciiz "\nSuma: "
+	zzakresu: .asciiz "\nLiczby z zakresu: "
 	iloczyn: .asciiz "\nIloczyn: "
 	wczytane: .asciiz "\nWczytany ciag liczb: "
 	wczytane2: .asciiz "\nWczytany drugi ciag liczb: "
@@ -19,13 +22,11 @@
 
 main:
 #funkcja wczytaj
+jal funkcja_zakres
 la $s6, tab
 move $t1, $s6
 jal funkcja_wczytaj
-# funkcja wyswietl
-la $s7, tab1
-move $t1, $s7
-jal funkcja_wczytaj
+
 # funkcja sumuj
 jal funkcja_sumuj
 
@@ -45,6 +46,33 @@ powtorz:
 		li $v0, 10
 		syscall		
 
+funkcja_zakres:
+	#wczytanie ilosci liczb
+	li $v0, 4
+	la $a0, zakres
+	syscall
+	
+	#wczytaj a
+	li $v0, 4
+	la $a0, a
+	syscall
+	
+	#wczytanie liczby
+	li $v0, 5
+	syscall	
+	move $s4, $v0	
+
+	#wczytaj b
+	li $v0, 4
+	la $a0, b
+	syscall	
+	
+	#wczytanie liczby
+	li $v0, 5
+	syscall	
+	move $s2, $v0
+	
+	jr $ra
 funkcja_wczytaj:
    	
 	#wczytanie ilosci liczb
@@ -114,7 +142,7 @@ funkcja_sumuj:
 		
 		#nowa linia
 		li $v0, 4
-		la $a0, suma
+		la $a0, zzakresu
 		syscall
 	
 				
@@ -125,18 +153,20 @@ funkcja_sumuj:
 		
 		#³adowanie s³owa
 		lw $t5, ($s6)
-		lw $t8, ($s7)
 		
 		
-		bne $t5, $t8, niewypisuj
+		ble $s2, $t5, niedodawaj
+		bge $s4, $t5, niedodawaj
+
+
+		
 		#wypisanie liczby z tablicy
-		div $s4, $t1, 4
-		addi $s4, $s4, 1
+				
 		li $v0, 1
-		move $a0, $s4
+		move $a0, $t5
 		syscall
 		
-		
+		addi $t9, $t9, 1 
 		
 		#add $t7, $t5, $t8
 		
@@ -155,8 +185,8 @@ funkcja_sumuj:
 		la $a0, newline
 		syscall
 		
-		niewypisuj:
-		addi $s7, $s7, 4 
+		niedodawaj:
+		
 		addi $s6, $s6, 4 
 		addi $t1, $t1, 4 
 		
@@ -167,6 +197,15 @@ funkcja_sumuj:
 	
 	
 	endd:	
+	#nowa linia
+	li $v0, 4
+	la $a0, iloscz
+	syscall
+	
+	li $v0, 1
+	move $a0, $t9
+	syscall
+			
 	jr $ra		
 
 
@@ -174,12 +213,6 @@ funkcja_sumuj:
 
 		
 						
-		
-		
-		
-		
-		
-		
 		
 		
 		

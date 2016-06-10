@@ -2,7 +2,7 @@
 	wprowadzW: .asciiz "Wprowadz ilosc wierszy \n>"
 	wprowadzK: .asciiz "Wprowadz ilosc kolumn \n>"
 	wprowadzE: .asciiz "Wprowadz element "
-	prompter: .asciiz "\n   "
+	prompter: .asciiz ": "
 	separatorK: .asciiz ", "
 	separatorW: .asciiz "\n"
 	wyswietlenie: .asciiz "Wczytana macierz: \n"
@@ -56,7 +56,7 @@ czytajLoop:
 	syscall
 	
 	div $t3, $t0, 4
-	div $t1 $t3, $s2
+	div $t1, $t3, $s2
 	
 	move $a0, $t1
 	

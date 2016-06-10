@@ -1,4 +1,4 @@
-.data
+.data 
 	tab: .space 100
 	tab1: .space 100
 	a: .asciiz "Wprowadz 'a': " 
